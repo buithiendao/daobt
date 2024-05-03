@@ -1,0 +1,6 @@
+data "template_file" "linux-metadata" {
+template = <<EOF
+sudo …
+sudo …
+EOF
+}
