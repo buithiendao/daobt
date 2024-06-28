@@ -1,0 +1,100 @@
+<#
+    .SYNOPSIS
+    Add-NewUsers.ps1
+
+    .DESCRIPTION
+    Tạo người dùng Active Directory từ tệp CSV.
+
+    .LINK
+    alitajran.com/create-active-directory-users-from-csv-with-powershell
+
+    .NOTES
+    Viết bởi: ALI TAJRAN
+    Website:    alitajran.com
+    LinkedIn:   linkedin.com/in/alitajran
+
+    .CHANGELOG
+    V1.00, 03/12/2020 - Phiên bản ban đầu
+    V2.00, 02/07/2024 - Thêm try/catch và thay đổi để sử dụng splatting
+    V2.01, 28/06/2024 - Thêm kiểm tra cho các trường trống
+#>
+
+# Import module Active Directory để chạy các cmdlets AD
+Import-Module ActiveDirectory
+
+# Lưu dữ liệu từ tệp CSV NewUsersFinal.csv vào biến $ADUsers
+$ADUsers = Import-Csv "C:\Users\Admin\Documents\Script Import user\test.csv" -Delimiter ";"
+
+# Định nghĩa UPN
+$UPN = "exoip.com"
+
+# Vòng lặp qua từng hàng chứa chi tiết người dùng trong tệp CSV
+foreach ($User in $ADUsers) {
+    try {
+        # Kiểm tra các trường bắt buộc
+        if ([string]::IsNullOrWhiteSpace($User.username) -or
+            [string]::IsNullOrWhiteSpace($User.firstname) -or
+            [string]::IsNullOrWhiteSpace($User.lastname) -or
+            [string]::IsNullOrWhiteSpace($User.password) -or
+            [string]::IsNullOrWhiteSpace($User.ou)) {
+            Write-Host "Thông tin người dùng bị thiếu ở một trường bắt buộc. Bỏ qua việc tạo người dùng." -ForegroundColor Yellow
+            continue
+        }
+
+        # Kiểm tra và gán giá trị mặc định cho các trường rỗng không bắt buộc
+        $User.initials       = if ($User.initials) { $User.initials } else { "" }
+        $User.city           = if ($User.city) { $User.city } else { "" }
+        $User.zipcode        = if ($User.zipcode) { $User.zipcode } else { "" }
+        $User.country        = if ($User.country) { $User.country } else { "" }
+        $User.company        = if ($User.company) { $User.company } else { "" }
+        $User.state          = if ($User.state) { $User.state } else { "" }
+        $User.streetaddress  = if ($User.streetaddress) { $User.streetaddress } else { "" }
+        $User.telephone      = if ($User.telephone) { $User.telephone } else { "" }
+        $User.email          = if ($User.email) { $User.email } else { "" }
+        $User.jobtitle       = if ($User.jobtitle) { $User.jobtitle } else { "" }
+        $User.department     = if ($User.department) { $User.department } else { "" }
+
+        # Định nghĩa các tham số sử dụng hashtable
+        $UserParams = @{
+            SamAccountName        = $User.username
+            UserPrincipalName     = "$($User.username)@$UPN"
+            Name                  = "$($User.firstname) $($User.lastname)"
+            GivenName             = $User.firstname
+            Surname               = $User.lastname
+            Initial               = $User.initials
+            Enabled               = $True
+            DisplayName           = "$($User.firstname) $($User.lastname)"
+            Path                  = $User.ou # Trường này đề cập đến OU mà tài khoản người dùng sẽ được tạo
+            City                  = $User.city
+            PostalCode            = $User.zipcode
+            Country               = $User.country
+            Company               = $User.company
+            State                 = $User.state
+            StreetAddress         = $User.streetaddress
+            OfficePhone           = $User.telephone
+            EmailAddress          = $User.email
+            Title                 = $User.jobtitle
+            Department            = $User.department
+            AccountPassword       = (ConvertTo-SecureString $User.password -AsPlainText -Force)
+            ChangePasswordAtLogon = $False
+        }
+
+        # Kiểm tra xem người dùng đã tồn tại trong AD chưa
+        if (Get-ADUser -Filter "SamAccountName -eq '$($User.username)'") {
+            # Cảnh báo nếu người dùng đã tồn tại
+            Write-Host "Người dùng với tên đăng nhập $($User.username) đã tồn tại trong Active Directory." -ForegroundColor Yellow
+        }
+        else {
+            # Người dùng không tồn tại, tiếp tục tạo tài khoản người dùng mới
+            # Tài khoản sẽ được tạo trong OU cung cấp bởi biến $User.ou đọc từ tệp CSV
+            New-ADUser @UserParams
+
+            # Nếu người dùng được tạo, hiển thị thông báo
+            Write-Host "Người dùng $($User.username) đã được tạo." -ForegroundColor Green
+        }
+    }
+    catch {
+        # Xử lý bất kỳ lỗi nào xảy ra trong quá trình tạo tài khoản
+        Write-Host "Không thể tạo người dùng $($User.username) - $_" -ForegroundColor Red
+    }
+}
