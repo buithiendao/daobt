@@ -14,7 +14,7 @@ default:
         hosts: True
         snapshots: True
 
-esx:
+esx_1:
     vsphere_host: vc.example2.com
     vsphere_user: 'root'
     vsphere_password: 'password'
@@ -30,7 +30,7 @@ esx:
         hosts: True
         snapshots: True
 
-limited:
+esx_2:
     vsphere_host: slowvc.example.com
     vsphere_user: 'administrator@vsphere.local'
     vsphere_password: 'password'
