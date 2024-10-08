@@ -1,4 +1,20 @@
+global:
+  scrape_interval: 15s  # Thời gian giữa các lần thu thập dữ liệu
+  evaluation_interval: 15s  # Thời gian giữa các lần đánh giá quy tắc
+
 scrape_configs:
   - job_name: 'vmware_exporter'
     static_configs:
-      - targets: ['<docker_host_ip>:9272']  # Thay bằng địa chỉ IP hoặc hostname của máy chạy Docker
+      - targets:
+          - '<vmware_exporter_host_ip>:9272'  # Địa chỉ IP hoặc hostname của máy chủ chạy VMware Exporter
+
+  - job_name: 'vmware_esxi'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+          - 'esxi1.company.com'  # Địa chỉ của ESXi server 1
+          - 'esxi2.company.com'  # Địa chỉ của ESXi server 2
+          - 'esxi3.company.com'  # Địa chỉ của ESXi server 3
+
+rule_files:
+  - /etc/prometheus-docker/vmware_exporter/pryorda-vmware-exporter.yml  # Đường dẫn tới file rules cảnh báo
