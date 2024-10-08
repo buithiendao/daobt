@@ -14,7 +14,7 @@ default:
         hosts: True
         snapshots: True
 
-esxi:
+esx:
     vsphere_host: vc.example2.com
     vsphere_user: 'root'
     vsphere_password: 'password'
