@@ -29,8 +29,9 @@ esx_1:
         datastores: False
         hosts: True
         snapshots: True
-
-esx_2:
+        
+## thu thap datastore
+limited:
     vsphere_host: slowvc.example.com
     vsphere_user: 'administrator@vsphere.local'
     vsphere_password: 'password'
