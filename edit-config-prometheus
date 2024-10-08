@@ -1,6 +1,4 @@
-- job_name: 'vmware_vcenter'
-    metrics_path: '/metrics'
-    scrape_timeout: 15s
+scrape_configs:
+  - job_name: 'vmware_exporter'
     static_configs:
-      - targets:
-        - 'localhost:9272'
+      - targets: ['<docker_host_ip>:9272']  # Thay bằng địa chỉ IP hoặc hostname của máy chạy Docker
