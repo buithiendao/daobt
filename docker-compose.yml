@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  vmware-exporter:
+    image: pryorda/vmware_exporter
+    container_name: vmware_exporter
+    restart: unless-stopped
+    ports:
+      - "9272:9272"
+    volumes:
+      - /etc/prometheus-docker/vmware_exporter/config.yml:/opt/vmware_exporter/config.yml
+    command: -c /opt/vmware_exporter/config.yml
