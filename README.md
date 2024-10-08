@@ -14,6 +14,6 @@
 ##############
 
 ## Check docker vmware_exporter
-** docker ps<br>
-** docker logs vmware_exporter<br>
-** http://<docker_host_ip>:9272/metrics<br>
+docker ps<br>
+docker logs vmware_exporter<br>
+http://<docker_host_ip>:9272/metrics<br>
