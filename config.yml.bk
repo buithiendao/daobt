@@ -30,7 +30,8 @@ esx_1:
         hosts: True
         snapshots: True
 
-# thu thap datastore
+## esx_1: Tập trung vào việc thu thập thông tin chi tiết về VM guests, hosts, và snapshots, đồng thời thu thập cảnh báo.        
+## limited: Hạn chế việc thu thập dữ liệu, chỉ thu thập thông tin về datastores và không thu thập cảnh báo hoặc thông tin về VM và hosts.
 limited:
     vsphere_host: slowvc.example.com
     vsphere_user: 'administrator@vsphere.local'
