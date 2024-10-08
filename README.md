@@ -8,7 +8,7 @@
 ## Dowload config user/pass vmware
 `wget -P /etc/prometheus-docker/vmware_exporter https://github.com/buithiendao/daobt/blob/4357550fade53c3d966dd1cb95f96f4c4506481f/config.yml`
 ## Dowload config prometheus rules /etc/prometheus-docker/vmware_exporter
-`wget -P /etc/prometheus-docker/vmware_exporter https://raw.githubusercontent.com/samber/awesome-prometheus-alerts/master/dist/rules/vmware/pryorda-vmware-exporter.yml`<br>
+`wget -P /etc/prometheus-docker/vmware_exporter https://github.com/hieu15/tai-lieu-prometheus/blob/046c63ccaee3e0ebe1fc952cd9c8f0dd339beeb9/config/alert_rule/vmware-rules.yml`<br>
 `docker-compose -f /etc/prometheus-docker/vmware_exporter/docker-compose.yml up -d`
 
 ##############
