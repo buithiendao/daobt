@@ -17,4 +17,4 @@ scrape_configs:
           - 'esxi3.company.com'  # Địa chỉ của ESXi server 3
 
 rule_files:
-  - /etc/prometheus-docker/vmware_exporter/pryorda-vmware-exporter.yml  # Đường dẫn tới file rules cảnh báo
+  - /etc/prometheus-docker/vmware_exporter/vmware-rules.yml  # Đường dẫn tới file rules cảnh báo
